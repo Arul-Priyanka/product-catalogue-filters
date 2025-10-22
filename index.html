@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Catalog — Teal & Navy Theme</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-teal-50 text-gray-800 antialiased">
+  <header class="bg-gradient-to-r from-teal-700 to-blue-900 fixed top-0 w-full z-10 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between text-white">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 bg-white/20 rounded-lg flex items-center justify-center font-bold">PC</div>
+        <div>
+          <h1 class="text-xl font-semibold">Product Catalog</h1>
+          <p class="text-sm text-teal-100">Discover & Filter Products</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <input id="search" type="search" placeholder="Search products..." class="px-3 py-2 rounded-lg text-sm text-gray-800 w-56 focus:outline-none focus:ring-2 focus:ring-teal-300" />
+        <select id="sort" class="px-3 py-2 rounded-lg text-sm text-gray-800 focus:outline-none">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <aside class="lg:col-span-1 bg-white rounded-2xl p-6 shadow-lg h-fit fixed top-32 w-64 hidden lg:block">
+        <h2 class="text-lg font-medium mb-4 text-teal-700">Filters</h2>
+
+        <div class="mb-4">
+          <h3 class="text-sm font-semibold mb-2 text-blue-900">Main Category</h3>
+          <div id="mainCategories" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="text-sm font-semibold mb-2 text-blue-900">Product Category</h3>
+          <div id="categories" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="text-sm font-semibold mb-2 text-blue-900">Product Type</h3>
+          <div id="types" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="text-sm font-semibold mb-2 text-blue-900">Price Range</h3>
+          <div class="flex items-center gap-3">
+            <input id="minPrice" type="number" placeholder="Min" class="w-1/2 px-3 py-2 border rounded-lg text-sm" />
+            <input id="maxPrice" type="number" placeholder="Max" class="w-1/2 px-3 py-2 border rounded-lg text-sm" />
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="applyFilters" class="flex-1 bg-teal-600 text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-teal-700">Apply</button>
+          <button id="clearFilters" class="flex-1 border border-teal-600 text-teal-700 rounded-lg px-4 py-2 text-sm">Clear</button>
+        </div>
+      </aside>
+
+      <section class="lg:col-span-3 lg:ml-72">
+        <div id="resultsInfo" class="mb-4 text-sm text-gray-600"></div>
+
+        <!-- Grouped grid container: each mainCategory gets a section -->
+        <div id="groupedGrid" class="space-y-8"></div>
+
+        <div id="empty" class="hidden p-8 text-center text-gray-500">No products match your filters.</div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-gray-500">© <span id="year"></span> Product Catalog — Teal & Navy Theme</div>
+  </footer>
+
+  <script>
+    const products = [
+      { id: 1, title: 'Leather Wallet', price: 39.99, mainCategory: 'Fashion', category: 'Accessories', type: 'Leather', icon: '💼', rating: 4.6 },
+      { id: 2, title: 'Wooden Chair', price: 129.00, mainCategory: 'Furniture', category: 'Seating', type: 'Wood', icon: '🪑', rating: 4.4 },
+      { id: 3, title: 'Coffee Mug', price: 15.50, mainCategory: 'Food', category: 'Kitchenware', type: 'Ceramic', icon: '☕', rating: 4.8 },
+      { id: 4, title: 'Headphones', price: 199.99, mainCategory: 'Electronics', category: 'Audio', type: 'Wireless', icon: '🎧', rating: 4.3 },
+      { id: 5, title: 'T-Shirt', price: 25.00, mainCategory: 'Fashion', category: 'Clothing', type: 'Cotton', icon: '👕', rating: 4.7 },
+      { id: 6, title: 'Desk Planter', price: 22.00, mainCategory: 'Home', category: 'Decor', type: 'Plant', icon: '🪴', rating: 4.2 },
+      { id: 7, title: 'Knife Set', price: 89.50, mainCategory: 'Food', category: 'Kitchenware', type: 'Steel', icon: '🔪', rating: 4.5 },
+      { id: 8, title: 'Table Lamp', price: 59.95, mainCategory: 'Furniture', category: 'Lighting', type: 'Desk', icon: '💡', rating: 4.1 },
+      { id: 9, title: 'Backpack', price: 74.00, mainCategory: 'Fashion', category: 'Accessories', type: 'Nylon', icon: '🎒', rating: 4.6 },
+      { id: 10, title: 'Sneakers', price: 99.00, mainCategory: 'Fashion', category: 'Footwear', type: 'Casual', icon: '👟', rating: 4.8 },
+      { id: 11, title: 'Bluetooth Speaker', price: 120.00, mainCategory: 'Electronics', category: 'Audio', type: 'Portable', icon: '🔊', rating: 4.4 },
+      { id: 12, title: 'Wall Clock', price: 45.00, mainCategory: 'Home', category: 'Decor', type: 'Clock', icon: '🕰️', rating: 4.5 },
+      { id: 13, title: 'Sofa Cushion', price: 35.00, mainCategory: 'Furniture', category: 'Upholstery', type: 'Fabric', icon: '🛋️', rating: 4.3 },
+      { id: 14, title: 'Sunglasses', price: 59.00, mainCategory: 'Fashion', category: 'Accessories', type: 'Glass', icon: '🕶️', rating: 4.7 },
+      { id: 15, title: 'Smartwatch', price: 250.00, mainCategory: 'Electronics', category: 'Wearables', type: 'Smart', icon: '⌚', rating: 4.6 },
+      { id: 16, title: 'Cooking Pot', price: 49.00, mainCategory: 'Food', category: 'Cookware', type: 'Steel', icon: '🍲', rating: 4.4 },
+      { id: 17, title: 'Blazer', price: 150.00, mainCategory: 'Fashion', category: 'Clothing', type: 'Formal', icon: '🧥', rating: 4.5 },
+      { id: 18, title: 'Floor Rug', price: 89.00, mainCategory: 'Home', category: 'Decor', type: 'Fabric', icon: '🪶', rating: 4.3 },
+      { id: 19, title: 'Laptop Stand', price: 69.00, mainCategory: 'Electronics', category: 'Office', type: 'Metal', icon: '💻', rating: 4.6 },
+      { id: 20, title: 'Handbag', price: 110.00, mainCategory: 'Fashion', category: 'Accessories', type: 'Leather', icon: '👜', rating: 4.7 }
+    ];
+
+    const mainCategoriesList = Array.from(new Set(products.map(p => p.mainCategory))).sort();
+    const categoriesList = Array.from(new Set(products.map(p => p.category))).sort();
+    const typesList = Array.from(new Set(products.map(p => p.type))).sort();
+
+    const groupedGrid = document.getElementById('groupedGrid');
+    const mainCatContainer = document.getElementById('mainCategories');
+    const categoriesContainer = document.getElementById('categories');
+    const typesContainer = document.getElementById('types');
+    const searchInput = document.getElementById('search');
+    const sortSelect = document.getElementById('sort');
+    const resultsInfo = document.getElementById('resultsInfo');
+    const empty = document.getElementById('empty');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const applyBtn = document.getElementById('applyFilters');
+    const clearBtn = document.getElementById('clearFilters');
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function renderFilterButtons(container, list, type) {
+      container.innerHTML = '';
+      list.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'px-3 py-1 text-sm border border-teal-600 rounded-full text-teal-700 hover:bg-teal-100';
+        btn.textContent = item;
+        btn.dataset[type] = item;
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('bg-teal-600');
+          btn.classList.toggle('text-white');
+          btn.classList.toggle('border-transparent');
+          applyFilterAndRender();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function productCard(product) {
+      const el = document.createElement('article');
+      el.className = 'bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition p-6 flex flex-col items-center';
+      el.innerHTML = `
+        <div class="text-5xl mb-4">${product.icon}</div>
+        <h3 class="text-base font-semibold text-blue-900 text-center">${product.title}</h3>
+        <p class="text-xs text-gray-500 mb-2">${product.mainCategory} • ${product.category} • ${product.type}</p>
+        <div class="text-sm font-semibold text-teal-700 mb-2">₹${product.price.toFixed(2)}</div>
+        <div class="text-xs text-gray-400 mb-4">★ ${product.rating}</div>
+        <div class="flex gap-2 w-full">
+          <button class="flex-1 px-3 py-2 border border-teal-600 rounded-lg text-sm text-teal-700 hover:bg-teal-100">Details</button>
+          <button class="px-3 py-2 bg-teal-600 text-white rounded-lg text-sm hover:bg-teal-700">Add</button>
+        </div>`;
+      return el;
+    }
+
+    function applyFilterAndRender() {
+      const activeMainCats = Array.from(mainCatContainer.querySelectorAll('button.bg-teal-600')).map(b => b.dataset.maincategory);
+      const activeCats = Array.from(categoriesContainer.querySelectorAll('button.bg-teal-600')).map(b => b.dataset.category);
+      const activeTypes = Array.from(typesContainer.querySelectorAll('button.bg-teal-600')).map(b => b.dataset.type);
+      const search = searchInput.value.trim().toLowerCase();
+      const sort = sortSelect.value;
+      const minP = parseFloat(minPriceInput.value) || null;
+      const maxP = parseFloat(maxPriceInput.value) || null;
+
+      let filtered = products.filter(p => {
+        if (activeMainCats.length && !activeMainCats.includes(p.mainCategory)) return false;
+        if (activeCats.length && !activeCats.includes(p.category)) return false;
+        if (activeTypes.length && !activeTypes.includes(p.type)) return false;
+        if (search && !(p.title + p.mainCategory + p.category + p.type).toLowerCase().includes(search)) return false;
+        if (minP !== null && p.price < minP) return false;
+        if (maxP !== null && p.price > maxP) return false;
+        return true;
+      });
+
+      if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+      if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+
+      // Group by mainCategory so UI shows clear sections
+      const groups = {};
+      filtered.forEach(p => {
+        if (!groups[p.mainCategory]) groups[p.mainCategory] = [];
+        groups[p.mainCategory].push(p);
+      });
+
+      // render grouped sections
+      groupedGrid.innerHTML = '';
+      const groupKeys = Object.keys(groups);
+      if (groupKeys.length === 0) {
+        empty.classList.remove('hidden');
+        resultsInfo.textContent = '0 products';
+        return;
+      } else {
+        empty.classList.add('hidden');
+      }
+
+      let total = 0;
+      groupKeys.forEach(key => total += groups[key].length);
+      resultsInfo.textContent = `${total} product${total>1?'s':''} — grouped by main category`;
+
+      groupKeys.forEach(key => {
+        const section = document.createElement('section');
+        section.className = 'bg-white rounded-2xl p-4 shadow-sm';
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-4';
+        header.innerHTML = `<h3 class="text-lg font-semibold text-blue-900">${key}</h3><div class="text-sm text-gray-500">${groups[key].length} item${groups[key].length>1?'s':''}</div>`;
+
+        const innerGrid = document.createElement('div');
+        innerGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+
+        groups[key].forEach(p => innerGrid.appendChild(productCard(p)));
+
+        section.appendChild(header);
+        section.appendChild(innerGrid);
+        groupedGrid.appendChild(section);
+      });
+    }
+
+    renderFilterButtons(mainCatContainer, mainCategoriesList, 'maincategory');
+    renderFilterButtons(categoriesContainer, categoriesList, 'category');
+    renderFilterButtons(typesContainer, typesList, 'type');
+    applyFilterAndRender();
+
+    searchInput.addEventListener('input', applyFilterAndRender);
+    sortSelect.addEventListener('change', applyFilterAndRender);
+    applyBtn.addEventListener('click', applyFilterAndRender);
+    clearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      sortSelect.value = 'default';
+      minPriceInput.value = '';
+      maxPriceInput.value = '';
+      [...mainCatContainer.querySelectorAll('button'), ...categoriesContainer.querySelectorAll('button'), ...typesContainer.querySelectorAll('button')].forEach(b => {
+        b.classList.remove('bg-teal-600','text-white','border-transparent');
+      });
+      applyFilterAndRender();
+    });
+    [minPriceInput, maxPriceInput].forEach(inp => inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') applyFilterAndRender();
+    }));
+  </script>
+</body>
+</html>
