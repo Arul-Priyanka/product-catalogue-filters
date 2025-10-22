@@ -2,23 +2,23 @@ Product Catalog — Teal & Navy Theme
 Overview
 This is a static HTML/CSS/JS product catalog website using Tailwind CSS. The catalog displays a variety of products in a 3-column grid layout and provides several interactive filters to help users quickly find items.
 Key features:
-•	20 sample products with icons instead of images.
-•	Sidebar with dynamic filters:
-o	Dropdown filter by main category (e.g., Electronics, Kitchen, Accessories, Furniture).
-o	Filter buttons for product category and product type.
-o	Price range filter (min & max).
-o	Search bar and sort options.
-•	Responsive layout (3-column on large screens, stacked on mobile).
-•	Dynamic grouping of products by category.
-•	Uses id attributes and data attributes to enable dynamic filtering.
-•	Color theme: Teal and Navy Blue.
+    •	20 sample products with icons instead of images.
+    •	Sidebar with dynamic filters:
+    o	Dropdown filter by main category (e.g., Electronics, Kitchen, Accessories, Furniture).
+    o	Filter buttons for product category and product type.
+    o	Price range filter (min & max).
+    o	Search bar and sort options.
+    •	Responsive layout (3-column on large screens, stacked on mobile).
+    •	Dynamic grouping of products by category.
+    •	Uses id attributes and data attributes to enable dynamic filtering.
+    •	Color theme: Teal and Navy Blue.
 Folder Structure
 project-root/
-│
-├─ index.html        # Main HTML file
-├─ style.css         # Optional additional styles
-├─ script.js         # JavaScript logic (filtering, rendering)
-└─ README.md         # This file
+  │
+  ├─ index.html        # Main HTML file
+  ├─ style.css         # Optional additional styles
+  ├─ script.js         # JavaScript logic (filtering, rendering)
+  └─ README.md         # This file
 How to Run
 1.	Clone or download the repository.
 2.	Open index.html in a web browser (Chrome, Firefox, Edge, etc.).
