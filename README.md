@@ -1,8 +1,6 @@
-Here’s a ready-to-use README content for your **Product Catalog — Teal & Navy Theme** project:
 
----
 
-# Product Catalog — Teal & Navy Theme
+# Product Catalog with filters
 
 ## Overview
 
